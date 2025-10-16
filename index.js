@@ -27,7 +27,7 @@ registerPostRoutes(fastify);
 
 
 try {
-    await fastify.listen({port: 3005})
+    await fastify.listen({port: process.env.PORT || 3001, host: process.env.HOST || '127.0.0.1'});
 }
 catch (err) {
     fastify.log.error(err)
