@@ -1,5 +1,8 @@
-import { PrismaClient } from '../generated/prisma/index.js';
-// Assurez-vous que le chemin est correct. Si ce fichier est à la racine, utilisez './generated/prisma/index.js'
+// Fichier : services/db.js
+
+// 1. Importe l'intégralité du module sous le nom 'pkg'
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg; // 2. Déstructure l'objet PrismaClient de l'objet importé
 
 console.log("[DEBUG] Connected to DB");
 

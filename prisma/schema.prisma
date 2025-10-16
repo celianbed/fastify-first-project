@@ -1,14 +1,45 @@
-generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
-}
+// schema.prisma
 
+// 1. DÉCLARATION DE LA SOURCE DE DONNÉES (DOIT ÊTRE EN PREMIER)
 datasource db {
-  provider = "mysql"
+  provider = "mysql" // Confirme l'utilisation de MySQL
   url      = env("DATABASE_URL")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+// 2. DÉCLARATION DU GÉNÉRATEUR
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 3. DÉFINITION DU MODÈLE POST
+// Ce modèle est nécessaire pour que 'prisma.post.findMany()' existe.
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(255)
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+// Fichier : schema.prisma (ou prisma/models/User.prisma)
+
+model User {
+  // L'ID est la clé primaire, correspond à 'id: number' du DTO.
+  id            Int      @id @default(autoincrement())
+
+  // 'email' est requis et doit être unique (garanti par 'format: email' dans le DTO).
+  email         String   @unique @db.VarChar(255)
+
+  // 'password' stockera le mot de passe HACHÉ (String).
+  // La longueur minimale de 8 dans le DTO garantit la qualité à l'entrée.
+  password      String   @db.VarChar(255)
+
+  // Champs optionnels souvent utiles pour la gestion des utilisateurs
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// 4. DÉFINITION DU MODÈLE BASE (si vous souhaitez le conserver)
+// Il est ignoré du client pour éviter les erreurs de clé primaire.
 model base {
   base Int
 
