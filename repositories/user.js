@@ -9,6 +9,7 @@ export const UserRepository = {
      * récupérer l'utilisateur par email. La VÉRIFICATION du mot de passe
      * (comparaison du HASH) doit se faire après, en utilisant une librairie comme 'bcrypt'.
      * * @param {string} email
+     * @param email
      * @param {string} rawPassword - Mot de passe en clair reçu de l'utilisateur.
      * @returns {Promise<Object | null>} - L'utilisateur trouvé, ou null.
      */

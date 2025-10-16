@@ -4,7 +4,7 @@ import {
     updatePostSchema,
     getPostSchema,
     listPostsSchema
-} from './postSchemas.js'; // Assurez-vous d'importer vos DTOs
+} from '../DTO/post.js'; // Assurez-vous d'importer vos DTOs
 
 export function registerPostRoutes(fastify) {
 

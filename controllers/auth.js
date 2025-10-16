@@ -2,8 +2,8 @@ import { UserRepositories } from "../repositories/user.js";
 
 import JWT from "jsonwebtoken";
 // Importer les DTOs (Schémas)
-import { loginSchema } from './dto/loginDto.js';
-import { registerSchema } from './dto/registerDto.js';
+import { loginSchema } from '../DTO/auth.js';
+import { registerSchema } from '../DTO/post.js';
 
 export default async function authRoutes(app, options) {
 
