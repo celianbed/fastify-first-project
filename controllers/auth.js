@@ -1,26 +1,51 @@
-import {UserRepositories} from "../repositories/user.js";
-import fastify from "fastify";
+import { UserRepositories } from "../repositories/user.js";
+
 import JWT from "jsonwebtoken";
+// Importer les DTOs (Schémas)
+import { loginSchema } from './dto/loginDto.js';
+import { registerSchema } from './dto/registerDto.js';
 
-fastify.post("/login",async (request,response)=>{
+export default async function authRoutes(app, options) {
 
-    const body = request.body;
-    const user = await UserRepositories.getUserByCredentials(body.email,body.password);
-    if(!user){
-        throw new Error("Utilisateur non trouvé");
-    }
-    user.token = JWT.sign({user:user.id}, process.env.JWT_SECRET, {expiresIn: "1d"});
-    return user
-});
+    app.post("/login", { schema: loginSchema }, async (request, response) => {
+        const { email, password } = request.body;
 
-fastify.post("/register",async (request,response)=>{
-    const body = request.body;
-    const newUser = {id,email,password}
-    return newUser
-})
+        const user = await UserRepositories.getUserByCredentials(email, password);
 
-fastify.post("/logout",async (request,response)=>{
-    const body = request.body;
-    const newUser = {id,email,password}
-    return newUser
-})
+        if (!user) {
+            return response.code(401).send(new Error("Identifiants invalides."));
+        }
+
+        // 2. Génération du JWT
+        const token = JWT.sign(
+            { id: user.id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        );
+
+        // 3. Réponse
+        return {
+            id: user.id,
+            email: user.email,
+            token: token
+        };
+    });
+
+    app.post("/register", { schema: registerSchema }, async (request, response) => {
+        const { email, password } = request.body;
+
+        const newUser = await UserRepositories.createUser(email, password);
+
+        return response.code(201).send({
+            id: newUser.id,
+            email: newUser.email,
+        });
+    });
+
+    // --- Endpoint de Déconnexion (Logout) ---
+    app.post("/logout", async (request, response) => {
+
+
+        return response.code(200).send({ message: "Déconnexion réussie. Le token doit être supprimé côté client." });
+    });
+}
