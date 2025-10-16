@@ -1,6 +1,6 @@
 import Fastify from 'fastify'
 import {registerPostRoutes} from "./controllers/post.js";
-const dotenv = require("dotenv")
+import * as dotenv from 'dotenv';
 
 dotenv.config();
 
